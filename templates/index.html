@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>App for Romek 2.0</title>
+</head>
+<body>
+    <h1>Welcome to Romek 2.0 webstite</h1>
+    
+    {% if loggedIn %}
+    <h2>You are logged in!!</h2>
+        <a href = "/devices"> Get current devices, that Spotify have access to</a><br>
+        <a href = "/playlists"> Get your playlists</a><br>
+        <a href = "/playbackState"> Get your playback state</a><br>
+        <a href = "/playPlayback"> Start a playback</a><br>
+        <a href = "/home"> Log out</a>
+    {% else %}
+    <h2>Please Log in to Spotify to have a full access to Romek 2.0</h2>
+    <a href="/login"> Log in with spotify</a> <br>
+    {% endif %}
+</body>
+</html>
