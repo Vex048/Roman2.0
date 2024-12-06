@@ -15,7 +15,7 @@ auth_url = os.getenv("AUTH_URL")
 token_url = os.getenv("TOKEN_URL")
 api_base_url = os.getenv("API_BASE_URL")
 
-
+currentPlaylist = "spotify:playlist:78ecbA4FHLsy0EI068AsSb"
 started=False
 device_id = "af3641b98ee5d8a30ae23f4af4d7f7b799f5cf23"
 
@@ -67,8 +67,19 @@ def callback():
 def get_auth_header(token):
     return {"Authorization": "Bearer "+ token}
 
-@app.route("/playlists")
+def playlistsFiltering(playlists):
+    items = playlists['items']
+    playlistsNamesId = []
+    for playlist in items:
+        playlistsNamesId.append({"name": playlist['name'], "id": playlist['uri']})
+    return playlistsNamesId
+
+
+
+
+@app.route("/playlists",methods=['POST','GET'])
 def playlists():
+    global currentPlaylist
     if 'access_token' not in session:
         return redirect("/login")
     
@@ -79,7 +90,15 @@ def playlists():
 
     result  = requests.get(api_base_url+"me/playlists",headers=headers)
     playlists = result.json()
-    return jsonify(playlists)
+    namesId = playlistsFiltering(playlists)
+
+    if request.method == "POST":
+        for playlist in namesId:
+            if request.form['chooseButton'] == playlist['name']:
+                currentPlaylist = playlist['id']
+    return render_template("playlists.html",names=namesId)
+
+
 
 
 @app.route("/devices")
@@ -129,7 +148,7 @@ def get_playback_track():
 
 @app.route("/playPlayback",methods=['POST','GET'])
 def start_stop_playback(pause=False):
-    global started
+    global started,currentPlaylist
 
     if 'access_token' not in session:
         return redirect("/login")
@@ -137,7 +156,7 @@ def start_stop_playback(pause=False):
         return redirect("/refresh-token")
     if started == False:
         req_body = {
-                            "context_uri": "spotify:playlist:78ecbA4FHLsy0EI068AsSb",
+                            "context_uri": currentPlaylist,
                             "position_ms": 0 
                         }
         started=True

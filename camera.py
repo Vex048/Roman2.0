@@ -1,36 +1,56 @@
 import cv2
-import scipy
 import tensorflow as tf
-from PIL import Image
 import numpy as np
-model_ = tf.keras.models.load_model("weights/mobilenetV3Large1.h5")
+import time
+import settings
 
-#model2 = tf.keras.models.create_model()
 
-cap = cv2.VideoCapture(0)
-cap.set(3,1280)
-cap.set(4,720)
-while True:
-    success, img = cap.read()
-    #print("Img_shape",img.shape)
-    frame = cv2.resize(img, (224,224))
-    #print(frame.shape)
+	
 
-    prediction=model_.predict(frame.reshape(1,224,224,3))
-    #print(prediction)
-    sm_preferred = tf.nn.softmax(prediction).numpy()
-    #print(sm_preferred)
-    #print("largest value:",np.max(sm_preferred))
-    #print("Smallest value:",np.min(sm_preferred))
-    if np.max(sm_preferred)>0.9995:
-
-        cv2.putText(img,str(np.argmax(prediction)), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2,
+def opencv(stop,model_):
+	print("Loading camera...")
+	cam = cv2.VideoCapture(0)
+	cam.set(3,1280)
+	cam.set(4,720)
+	beforeFrame = None
+	i=0
+	while True:
+		if stop():
+			break
+		ret, img = cam.read()
+		frame = cv2.resize(img, (224,224))
+		prediction=model_.predict(frame.reshape(1,224,224,3))
+		sm_preferred = tf.nn.softmax(prediction).numpy()
+		if np.max(sm_preferred)>0.95 and beforeFrame == str(np.argmax(prediction)) :
+			i+=1
+		else:
+			i=0
+			settings.handValue = None
+		beforeFrame = str(np.argmax(prediction))
+		if i>15:
+			settings.handValue = int(np.argmax(prediction))
+			returnValueFromHand()
+			cv2.putText(img, str(np.argmax(prediction)), (200,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2,
                     cv2.LINE_4)
+			
+		cv2.imshow('Imagetest',img)
+		k = cv2.waitKey(1)
+		if k != -1:
+			break
+	cam.release()
+	cv2.destroyAllWindows()
+	
 
-    #print("category:",np.argmax(prediction))
-    cv2.imshow("Gesture Recognition", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+def returnValueFromHand():
+        if settings.handValue == 0:
+            print("FIST")
+            time.sleep(3)
+        elif settings.handValue == 1:
+            print("ONE")
+            time.sleep(3)
+        elif settings.handValue == 2:
+            print("PALM")
+            time.sleep(3)
+        elif settings.handValue == 3:
+            print("THREE")
+            time.sleep(3)
