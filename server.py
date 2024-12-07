@@ -5,26 +5,21 @@ import os
 import urllib.parse
 from datetime import datetime
 import json
+import settings
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] ='7gf08975354hfsnkl2c39edasdd93e5mhhuyyd2765'
-
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
-redirect_uri = os.getenv("REDIRECT_URI")
-auth_url = os.getenv("AUTH_URL")
-token_url = os.getenv("TOKEN_URL")
-api_base_url = os.getenv("API_BASE_URL")
-
-currentPlaylist = "spotify:playlist:78ecbA4FHLsy0EI068AsSb"
-started=False
-device_id = "af3641b98ee5d8a30ae23f4af4d7f7b799f5cf23"
 
 
 @app.route('/')
 @app.route('/home')
 def home(loggedIn=False):
-    global started
-    started = False
+    settings.started = False
     if request.args:
         loggedIn = True
     return render_template("index.html",loggedIn=loggedIn)
@@ -33,13 +28,13 @@ def home(loggedIn=False):
 def login():
     scope = 'user-read-private user-read-email user-modify-playback-state user-read-playback-state'
     params = {
-        "client_id": client_id,
+        "client_id": settings.client_id,
         'response_type': 'code',
         'scope': scope,
-        'redirect_uri': redirect_uri,
+        'redirect_uri': settings.redirect_uri,
         'show_dialog': True
     }
-    auth_uri = auth_url + "?" + urllib.parse.urlencode(params)
+    auth_uri = settings.auth_url + "?" + urllib.parse.urlencode(params)
     return redirect(auth_uri)
 
 @app.route("/callback",methods=['POST','GET'])
@@ -52,12 +47,13 @@ def callback():
         req_body = {
             'code': request.args['code'],
             'grant_type': 'authorization_code',
-            'redirect_uri': redirect_uri,
-            'client_id': client_id,
-            'client_secret': client_secret
+            'redirect_uri': settings.redirect_uri,
+            'client_id': settings.client_id,
+            'client_secret': settings.client_secret
         }
-        response = requests.post(token_url, data=req_body)
+        response = requests.post(settings.token_url, data=req_body)
         token_info  = response.json()
+        settings.currToken = token_info['access_token']
         session['access_token'] = token_info['access_token']
         session['refresh_token'] = token_info['refresh_token']
         session['expires_at']= datetime.now().timestamp() + token_info['expires_in']
@@ -79,7 +75,6 @@ def playlistsFiltering(playlists):
 
 @app.route("/playlists",methods=['POST','GET'])
 def playlists():
-    global currentPlaylist
     if 'access_token' not in session:
         return redirect("/login")
     
@@ -88,14 +83,14 @@ def playlists():
     
     headers = get_auth_header(session['access_token'])
 
-    result  = requests.get(api_base_url+"me/playlists",headers=headers)
+    result  = requests.get(settings.api_base_url+"me/playlists",headers=headers)
     playlists = result.json()
     namesId = playlistsFiltering(playlists)
 
     if request.method == "POST":
         for playlist in namesId:
             if request.form['chooseButton'] == playlist['name']:
-                currentPlaylist = playlist['id']
+                settings.currentPlaylist = playlist['id']
     return render_template("playlists.html",names=namesId)
 
 
@@ -110,13 +105,14 @@ def get_devices():
         return redirect("/refresh-token")
     
     headers = get_auth_header(session['access_token'])
-    result  = requests.get(api_base_url+"me/player/devices",headers=headers)
+    result  = requests.get(settings.api_base_url+"me/player/devices",headers=headers)
     devices = result.json()
     return jsonify(devices)
 
 
 @app.route("/playbackState")
 def get_playback_state():
+    global session
     if 'access_token' not in session:
         return redirect("/login")
     
@@ -124,13 +120,14 @@ def get_playback_state():
         return redirect("/refresh-token")
     
     headers = get_auth_header(session['access_token'])
-    result  = requests.get(api_base_url+"me/player",headers=headers)
+    result  = requests.get(settings.api_base_url+"me/player",headers=headers)
     current_state = result.json()
     return jsonify(current_state)
 
 
 @app.route("/playbackTrack")
 def get_playback_track():
+    global session
     if 'access_token' not in session:
         return redirect("/login")
     
@@ -138,53 +135,78 @@ def get_playback_track():
         return redirect("/refresh-token")
     
     headers = get_auth_header(session['access_token'])
-    result  = requests.get(api_base_url+"me/player/currently-playing",headers=headers)
+    result  = requests.get(settings.api_base_url+"me/player/currently-playing",headers=headers)
     current_song = result.json()
     return jsonify(current_song)
 
-
-
-
-
 @app.route("/playPlayback",methods=['POST','GET'])
 def start_stop_playback(pause=False):
-    global started,currentPlaylist
-
+    global session
     if 'access_token' not in session:
         return redirect("/login")
     if datetime.now().timestamp() > session['expires_at']:
         return redirect("/refresh-token")
-    if started == False:
+
+    if settings.started == False:
         req_body = {
-                            "context_uri": currentPlaylist,
+                            "context_uri": settings.currentPlaylist,
                             "position_ms": 0 
                         }
-        started=True
+        settings.started=True
         headers = get_auth_header(session['access_token'])
-        requests.put(api_base_url+"me/player/play"+"?device_id="+device_id,headers=headers,data = json.dumps(req_body))
-        pause=False
+        requests.put(settings.api_base_url+"me/player/play"+"?device_id="+settings.device_id,headers=headers,data = json.dumps(req_body))
+        settings.pause=False
+
     if request.method == "POST":   
         if 'playPause' in request.form:
             state=request.form['playPause']
             if state == "Play":
                 headers = get_auth_header(session['access_token'])
-                requests.put(api_base_url+"me/player/play"+"?device_id="+device_id,headers=headers)
-                pause=False 
+                requests.put(settings.api_base_url+"me/player/play"+"?device_id="+settings.device_id,headers=headers)
+                settings.pause=False 
             else:
                 headers = get_auth_header(session['access_token'])
-                requests.put(api_base_url+"me/player/pause"+"?device_id="+device_id,headers=headers)
-                pause=True
+                requests.put(settings.api_base_url+"me/player/pause"+"?device_id="+settings.device_id,headers=headers)
+                settings.pause=True
         elif 'Previous' in request.form:
             print("Previous")
             headers = get_auth_header(session['access_token'])
-            requests.post(api_base_url+"me/player/previous"+"?device_id="+device_id,headers=headers)
+            requests.post(settings.api_base_url+"me/player/previous"+"?device_id="+settings.device_id,headers=headers)
         elif 'Next' in request.form:
             print("Next")
             headers = get_auth_header(session['access_token'])
-            requests.post(api_base_url+"me/player/next"+"?device_id="+device_id,headers=headers)
-    return render_template("playstop.html",pause=pause)
+            requests.post(settings.api_base_url+"me/player/next"+"?device_id="+settings.device_id,headers=headers)
+    return render_template("playstop.html",pause=settings.pause)
     
 
+def startPlayback():
+    if settings.started == False:
+        req_body = {
+                            "context_uri": settings.currentPlaylist,
+                            "position_ms": 0 
+                        }
+        settings.started=True
+        headers = get_auth_header(settings.currToken)
+        requests.put(settings.api_base_url+"me/player/play"+"?device_id="+settings.device_id,headers=headers,data = json.dumps(req_body))
+        settings.pause=False
+
+def resumePlayback():
+    headers = get_auth_header(settings.currToken)
+    requests.put(settings.api_base_url+"me/player/play"+"?device_id="+settings.device_id,headers=headers)
+    settings.pause=True
+
+def stopPlayback():
+    headers = get_auth_header(settings.currToken)
+    requests.put(settings.api_base_url+"me/player/pause"+"?device_id="+settings.device_id,headers=headers)
+    settings.pause=True
+
+def nextPlayback():
+    headers = get_auth_header(settings.currToken)
+    requests.post(settings.api_base_url+"me/player/next"+"?device_id="+settings.device_id,headers=headers)
+
+def prevPlayback():
+    headers = get_auth_header(settings.currToken)
+    requests.post(settings.api_base_url+"me/player/previous"+"?device_id="+settings.device_id,headers=headers)
 
 
 
@@ -197,12 +219,12 @@ def refresh_token():
         req_body = {
             'grant_type': 'refresh_token',
             'refresh_token': session['refresh_token'],
-            'client_id': client_id,
-            'client_secret': client_secret
+            'client_id': settings.client_id,
+            'client_secret': settings.client_secret
         }
-        response = requests.post(token_url,data=req_body)
+        response = requests.post(settings.token_url,data=req_body)
         new_token_info = response.json()
-
+        settings.currToken = new_token_info['access_token']
         session['access_token'] = new_token_info['access_token']
         session['refresh_token'] = new_token_info['refresh_token']
         session['expires_at'] = datetime.now().timestamp() + new_token_info['expires_in']
@@ -211,6 +233,12 @@ def refresh_token():
     
 
 
+def run():
+    load_dotenv()
+    app.run()
+
 
 if __name__ == "__main__":
+    load_dotenv()
+    settings.init()
     app.run(debug=True)
