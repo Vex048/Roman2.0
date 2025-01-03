@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Button</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Button for play/pause</h1>
+    {% if pause %}
+        <form action = "/playPlayback" method="POST">
+        <input type ='submit' name ="playPause" value = "Play"/>
+        <input type ='submit' name ="Previous" value = "Previous"/> 
+        <input type ='submit' name ="Next" value = "Next"/>
+        </form>
+    {% else %}
+        <form action = "/playPlayback" method="POST">
+        <input type ='submit' name ="playPause" value = "Pause"/>
+        <input type ='submit' name ="Previous" value = "Previous"/> 
+        <input type ='submit' name ="Next" value = "Next"/>
+        </form>
+    {% endif %}
+
+    <form action ="/callback", method = "POST">
+        <input type ='submit' name ="Back" value = "Back"/> 
+    </form>
+</body>
+</html>
