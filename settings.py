@@ -13,8 +13,8 @@ def init():
     auth_url = os.getenv("AUTH_URL")
     token_url = os.getenv("TOKEN_URL")
     api_base_url = os.getenv("API_BASE_URL")
-    currentPlaylist = "spotify:playlist:78ecbA4FHLsy0EI068AsSb"
-    device_id = "af3641b98ee5d8a30ae23f4af4d7f7b799f5cf23"
+    currentPlaylist = ####
+    device_id = ####
     stop_threads=False
     currToken = None
 
