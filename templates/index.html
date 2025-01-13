@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,4 +19,45 @@
     <a href="/login"> Log in with spotify</a> <br>
     {% endif %}
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>App for Romek 2.0</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="headers">
+        <div class="header1">
+    <h1>Welcome to Roman2.0 application</h1>
+        </div>
+    <div class ="header2">
+    {% if loggedIn %}
+    <h2>You are logged in!!</h2>
+    </div>
+    <div class = "afterlogin">
+        <div class ="button">
+        <a href = "/devices"> Get current devices</a><br>
+        </div>
+        <div class ="button">
+        <a href = "/playlists"> Get your playlists</a><br>
+        </div>
+        <div class ="button">
+        <a href = "/playPlayback"> Start a playback</a><br>
+        </div>
+        <div class ="button">
+        <a href = "/home"> Log out</a>
+        </div>
+    </div>
+    {% else %}
+    <div class ="header2">
+    <h2>Please Log in to Spotify to have a full access of what Roman2.0 have to offer</h2>
+    </div>
+    <div class ="button">
+    <a href="/login"> Log in with Spotify</a> <br>
+    </div>
+    {% endif %}
+    </div>
+</body>
+>>>>>>> 7ae0a8575beda5c985a01ab99816cf4c0ae8f63a
 </html>

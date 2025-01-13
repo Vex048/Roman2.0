@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Devices</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class ="header1">
+<h1>Your devices</h1>
+</div>
+<div class="playliststable">
+<table>
+<form action ="/devices" method="post"> 
+{% for d in dev %}
+    <tr>
+        <td>{{ d['name'] }} <button type="submit" name="deviceButton" value = "{{ d['name'] }}" > Chose as current device </td> 
+    </tr>
+{% endfor %}
+</form>
+
+</form>
+</div>
+</table>
+<div class ="backbutton">
+    <form action ="/callback", method = "POST">
+        <input type ='submit' name ="Back" value = "Back"/> 
+    </div>
+</body>
+</html>

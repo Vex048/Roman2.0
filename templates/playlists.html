@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,4 +21,34 @@
 </form>
 </table>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Playlists</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class ="header1">
+<h1>Your Spotify playlists</h1>
+</div>
+
+<div class="playliststable">
+<table>
+<form action ="/playlists" method="post"> 
+{% for name in names %}
+    <tr>
+        <td>{{ name['name'] }} <button type="submit" name="chooseButton" value = "{{ name['name'] }}" > Chose as current playlist </td> 
+    </tr>
+{% endfor %}
+</form>
+</div>
+</table>
+<div class ="backbutton">
+<form action ="/callback", method = "POST"> 
+    <input type ='submit' name ="Back" value = "Back"/>   
+</form>
+</div> 
+</body>
+>>>>>>> 7ae0a8575beda5c985a01ab99816cf4c0ae8f63a
 </html>
