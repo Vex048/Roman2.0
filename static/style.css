@@ -1,0 +1,142 @@
+/* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Gotham', sans-serif; 
+    background-color: #121212; 
+    color: #FFFFFF; 
+    line-height: 1.6;
+}
+
+.headers{
+    font-weight: bold;
+    margin-bottom: 20px;
+
+}
+
+.header1 {
+    color: #1DB954; /* Spotify green */
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+
+.header2{
+    color: #FFFFFF; /* White */
+    text-align: center;
+    font-size: 1.0rem;
+}
+/* h2 {
+    color: #FFFFFF; 
+    text-align: center;
+    font-size: 1.8rem;
+} */
+.button{
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: 2px solid #1DB954; /* Green border */
+    border-radius: 50px; /* Rounded corners */
+    display: inline-block;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+a {
+    color: #1DB954;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #1DB954;
+    color: #121212;
+    color: #FFFFFF;
+}
+
+
+.afterlogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 10vh;
+}
+
+
+
+.playliststable {
+    margin: 30px auto;
+    padding: 30px;
+    max-width: 750px;
+    background-color: #181818; /* Slightly lighter dark */
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.playliststable table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: auto;
+    margin-right: auto;
+}
+
+.playliststable td {
+    padding: 20px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333333;
+}
+
+.playliststable button {
+    color: #121212;
+    background-color: #1DB954; 
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.playliststable button:hover {
+    background-color: #1ED760; 
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Back button container */
+.backbutton {
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    margin-top: 20px;
+}
+
+/* Back button styling */
+.backbutton input[type="submit"] {
+    color: #121212; 
+    background-color: #1DB954; 
+    border: none; 
+    border-radius: 10px; 
+    padding: 10px 20px;
+    font-size: 1rem; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+}
+
+.backbutton input[type="submit"]:hover {
+    background-color: #1ED760; 
+    color: #FFFFFF; 
+}
+
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    a {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+}
