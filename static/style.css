@@ -14,6 +14,7 @@ body {
 
 }
 
+
 .header1 {
     color: #1DB954; /* Spotify green */
     text-align: center;
@@ -107,6 +108,7 @@ a {
     justify-content: center; /* Centers the button horizontally */
     margin-top: 20px;
 }
+
 
 /* Back button styling */
 .backbutton input[type="submit"] {

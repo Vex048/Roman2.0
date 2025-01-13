@@ -46,6 +46,7 @@ while True:
     interpreter.invoke()
     output_data = interpreter.get_tensor(output_details[0]['index'])
     sm_preferred = tf.nn.softmax(output_data).numpy()
+    if np.max(sm_preferred)>=0.9925 and beforeFrame == str(np.argmax(output_data)):
        i+=1
     else:
        i=0

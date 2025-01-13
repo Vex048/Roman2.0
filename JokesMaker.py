@@ -1,6 +1,8 @@
 import random
 import json
 
+
+
 class JokesMaker:
     def __init__(self):
         self.jsonDict=None

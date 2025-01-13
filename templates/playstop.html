@@ -1,31 +1,5 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Button</title>
-</head>
-<body>
-    <h1>Button for play/pause</h1>
-    {% if pause %}
-        <form action = "/playPlayback" method="POST">
-        <input type ='submit' name ="playPause" value = "Play"/>
-        <input type ='submit' name ="Previous" value = "Previous"/> 
-        <input type ='submit' name ="Next" value = "Next"/>
-        </form>
-    {% else %}
-        <form action = "/playPlayback" method="POST">
-        <input type ='submit' name ="playPause" value = "Pause"/>
-        <input type ='submit' name ="Previous" value = "Previous"/> 
-        <input type ='submit' name ="Next" value = "Next"/>
-        </form>
-    {% endif %}
 
-    <form action ="/callback", method = "POST">
-        <input type ='submit' name ="Back" value = "Back"/> 
-    </form>
-</body>
-=======
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Button</title>
@@ -51,5 +25,4 @@
         <input type ='submit' name ="Back" value = "Back"/> 
     </form>
 </body>
->>>>>>> 7ae0a8575beda5c985a01ab99816cf4c0ae8f63a
 </html>

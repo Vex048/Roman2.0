@@ -1,28 +1,5 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>User Playlists</title>
-</head>
-<body>
-<h1>Your playlists</h1>
 
-<table>
-<form action ="/playlists" method="post"> 
-{% for name in names %}
-    <tr>
-        <td>{{ name['name'] }} <button type="submit" name="chooseButton" value = "{{ name['name'] }}" > Chose as current playlist </td> 
-    </tr>
-{% endfor %}
-</form>
-
-<form action ="/callback", method = "POST">
-    <input type ='submit' name ="Back" value = "Back"/> 
-</form>
-</table>
-</body>
-=======
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>User Playlists</title>
@@ -50,5 +27,4 @@
 </form>
 </div> 
 </body>
->>>>>>> 7ae0a8575beda5c985a01ab99816cf4c0ae8f63a
 </html>
