@@ -1,4 +1,13 @@
-Roman2.0 – Intelligent Assistant
-An intelligent assistant built with Raspberry Pi 4 that lets users control music using voice commands and hand gestures. It features a custom-trained neural network for gesture recognition and a Flask web application that interacts with the Spotify Web API to manage playback seamlessly.
+Roman2.0 – The Smart Voice & Gesture-Controlled Assistant
 
-For this project I've been using part of HaGRID dataset: https://github.com/hukenovs/hagrid
+Roman2.0 is an AI-powered assistant built on Raspberry Pi 4 that lets you control music playback using voice commands and hand gestures. It combines:
+
+Voice Control – Speak commands to play, pause, skip, or adjust volume.
+Gesture Recognition – A custom-trained neural network (using a subset of the HaGRID dataset) detects intuitive hand gestures for touch-free control. https://github.com/hukenovs/hagrid
+Spotify Integration – A Flask-based web app interacts with the Spotify Web API for smooth music management.
+
+Key Features
+* Hand Gesture Recognition (Play/Pause, Skip, Volume Control)
+* Voice Commands via Speech Recognition
+* Real-Time Spotify Control (Web API Integration)
+* Raspberry Pi 4 Optimized (Lightweight & Efficient)
